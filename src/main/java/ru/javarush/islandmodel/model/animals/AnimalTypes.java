@@ -1,5 +1,7 @@
 package ru.javarush.islandmodel.model.animals;
 
+import ru.javarush.islandmodel.model.animals.herbivores.Herbivore;
+
 public enum AnimalTypes {
     BEAR,
     BOA,

@@ -101,44 +101,44 @@ public abstract class Animal {
     }
 
     private Location getNewLocation(Location currentLocation, Location[][] locations) {
-        int oldX = currentLocation.getCoordinates().getX();
-        int oldY = currentLocation.getCoordinates().getY();
+        int oldCoordinateX = currentLocation.getCoordinates().getX();
+        int oldCoordinateY = currentLocation.getCoordinates().getY();
         int lengthIsland = locations.length;
         int widthIsland = locations[0].length;
-        Direction direction = getRandomDirection(oldX, oldY, lengthIsland, widthIsland);
+        Direction direction = getRandomDirection(oldCoordinateX, oldCoordinateY, lengthIsland, widthIsland);
         int steps = getRandomSteps(direction, lengthIsland, widthIsland);
-        int newX = getNewCoordinateX(direction, oldX, steps);
-        int newY = getNewCoordinateY(direction, oldY, steps);
-        if (!isValidCoordinates(newX, newY, lengthIsland, widthIsland)) {
+        int newCoordinateX = getNewCoordinateX(direction, oldCoordinateX, steps);
+        int newCoordinateY = getNewCoordinateY(direction, oldCoordinateY, steps);
+        if (!isValidCoordinates(newCoordinateX, newCoordinateY, lengthIsland, widthIsland)) {
             return null;
         }
-        Location newLocation = locations[newX][newY];
+        Location newLocation = locations[newCoordinateX][newCoordinateY];
         if (!isLocationFree(newLocation)) {
             return null;
         }
         return newLocation;
     }
 
-    private int getNewCoordinateX(Direction direction, int oldX, int steps) {
-        int newX = 0;
+    private int getNewCoordinateX(Direction direction, int oldCoordinateX, int steps) {
+        int newCoordinateX = 0;
         if (direction == UP) {
-            newX = oldX - steps;
+            newCoordinateX = oldCoordinateX - steps;
         }
         else if (direction == DOWN) {
-            newX = oldX + steps;
+            newCoordinateX = oldCoordinateX + steps;
         }
-        return newX;
+        return newCoordinateX;
     }
 
-    private int getNewCoordinateY(Direction direction, int oldY, int steps) {
-        int newY = 0;
-        if (direction == Direction.LEFT) {
-            newY = oldY - steps;
+    private int getNewCoordinateY(Direction direction, int oldCoordinateY, int steps) {
+        int newCoordinateY = 0;
+        if (direction == LEFT) {
+            newCoordinateY = oldCoordinateY - steps;
         }
-        else if (direction == Direction.RIGHT) {
-            newY = oldY + steps;
+        else if (direction == RIGHT) {
+            newCoordinateY = oldCoordinateY + steps;
         }
-        return newY;
+        return newCoordinateY;
     }
 
     private boolean isLocationFree(Location location) {
@@ -155,8 +155,8 @@ public abstract class Animal {
         }
     }
 
-    private boolean isValidCoordinates(int newX, int newY, int lengthIsland, int widthIsland) {
-        return newX <= lengthIsland - 1 && newY <= widthIsland - 1 && newX >= 0 && newY >= 0;
+    private boolean isValidCoordinates(int newCoordinateX, int newCoordinateY, int lengthIsland, int widthIsland) {
+        return newCoordinateX <= lengthIsland - 1 && newCoordinateY <= widthIsland - 1 && newCoordinateX >= 0 && newCoordinateY >= 0;
     }
 
     private Direction getRandomDirection(int oldX, int oldY, int lengthIsland, int widthIsland) {

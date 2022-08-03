@@ -35,10 +35,11 @@ public class Location {
     }
 
     public void eating() {
-        predators.forEach(predator -> predator.eat(herbivores));
+
         for (int i = 0; i < predators.size(); i++) {
             predators.get(i).eat(predators);
         }
+        predators.forEach(predator -> predator.eat(herbivores));
         herbivores.forEach(herbivore -> herbivore.eat(plants));
     }
 
@@ -67,30 +68,6 @@ public class Location {
         } else if (animal instanceof Predator predator) {
             predators.add(predator);
         }
-    }
-
-    public void printInfo() {
-        System.out.println("==================================================");
-        System.out.println("Location [" + coordinates.getX() + ", " + coordinates.getY() + "]");
-        System.out.print("Predators [ ");
-        // for (Predator predator: PredatorTypes.values()) {
-        //     System.out.print(predator.toString() + ":" + predators.stream().filter(predator::equals).count() + " ");
-        // }
-        System.out.print(predators);
-
-        System.out.println("]");
-        System.out.print("Herbivores [ ");
-        //   for (Herbivore herbivore: HerbivoreTypes.getInstance().getTypes()) {
-        //        System.out.print(herbivore.toString() + ":" + herbivores.stream().filter(herbivore::equals).count() + " ");
-        //   }
-        System.out.print(herbivores);
-        System.out.println("]");
-        System.out.print("Plants [ ");
-        //   for (Plant plant: PlantTypes.getInstance().getTypes()) {
-        //       System.out.print(plant.toString() + ":" + plants.stream().filter(plant::equals).count() + " ");
-        //   }
-        System.out.println(plants);
-        System.out.println("]");
     }
 
     private List<? extends Animal> createAnimals(AnimalFactory factory) {

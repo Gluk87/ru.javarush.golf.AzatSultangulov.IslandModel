@@ -18,7 +18,6 @@ public class Island{
         for (int i = 0; i < length; i++){
             for (int j = 0; j < width; j++) {
                 locations[i][j] = new Location(new Coordinates(i, j), locations);
-                locations[i][j].printInfo();
             }
         }
     }
@@ -43,14 +42,6 @@ public class Island{
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
                 locations[i][j].breeding();
-            }
-        }
-    }
-
-    public void print() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].printInfo();
             }
         }
     }

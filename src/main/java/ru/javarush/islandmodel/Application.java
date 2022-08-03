@@ -1,6 +1,7 @@
 package ru.javarush.islandmodel;
 
 import ru.javarush.islandmodel.model.island.Island;
+import ru.javarush.islandmodel.system.Statistic;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,20 +36,23 @@ public class Application {
         //            executorService.execute(new Tact(island));
         //    }
 
+        Statistic statistic = new Statistic(island);
+        statistic.printInfo();
+
         System.out.println("--------------------------------------------------------------");
         System.out.println("Животные покушали:");
         island.startEating();
-        island.print();
+        statistic.printInfo();
 
         System.out.println("--------------------------------------------------------------");
         System.out.println("Животные перешли в другие локации:");
         island.startMoving();
-        island.print();
+        statistic.printInfo();
 
         System.out.println("--------------------------------------------------------------");
         System.out.println("Животные размножаются:");
         island.startBreeding();
-        island.print();
+        statistic.printInfo();
     }
 }
 
