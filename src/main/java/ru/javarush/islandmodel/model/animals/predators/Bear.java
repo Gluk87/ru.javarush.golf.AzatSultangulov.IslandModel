@@ -2,12 +2,9 @@ package ru.javarush.islandmodel.model.animals.predators;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.javarush.islandmodel.model.animals.Animal;
 import ru.javarush.islandmodel.model.animals.Characteristics;
 import ru.javarush.islandmodel.model.animals.Gender;
-import ru.javarush.islandmodel.model.animals.herbivores.*;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Getter
@@ -23,8 +20,6 @@ public class Bear extends Predator {
         this.satiety = this.getMaxSatiety()/2;
         this.isBreed = false;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

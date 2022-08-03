@@ -1,6 +1,5 @@
 package ru.javarush.islandmodel.model.animals;
 
-import ru.javarush.islandmodel.Application;
 import ru.javarush.islandmodel.exceptions.MissingAnnotationException;
 import ru.javarush.islandmodel.model.animals.herbivores.*;
 import ru.javarush.islandmodel.model.animals.predators.*;
@@ -9,14 +8,14 @@ import ru.javarush.islandmodel.model.island.Direction;
 import ru.javarush.islandmodel.model.island.Location;
 import ru.javarush.islandmodel.model.plants.Plant;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static ru.javarush.islandmodel.model.island.Direction.*;
+
 @SuppressWarnings("unchecked")
 public abstract class Animal {
-    public static final int COUNT_TRIES_TO_MOVE = 10;
+    public static final int COUNT_TRIES_TO_MOVE = 4;
     private static final Map<Class<? extends Animal>, Map<Class<? extends Animal>, Integer>> CHANCE_TO_EAT =
             Map.of(Wolf.class, Map.of(Deer.class, 15, Rabbit.class, 60, Mouse.class, 80, Goat.class, 60,
                             Sheep.class, 70, Boar.class, 15, Buffalo.class, 10, Duck.class, 40),
@@ -62,7 +61,7 @@ public abstract class Animal {
             }
             tries++;
         }
-        if (newLocation != null) {
+        if (newLocation != null && newLocation != currentLocation) {
             newLocation.addAnimal(this);
             return true;
         } else {
@@ -102,19 +101,17 @@ public abstract class Animal {
     }
 
     private Location getNewLocation(Location currentLocation, Location[][] locations) {
-
-        int steps = getRandomSteps();
         int oldX = currentLocation.getCoordinates().getX();
         int oldY = currentLocation.getCoordinates().getY();
-        int lengthIsland = getBorderIslandX();
-        int widthIsland = getBorderIslandY();
+        int lengthIsland = locations.length;
+        int widthIsland = locations[0].length;
         Direction direction = getRandomDirection(oldX, oldY, lengthIsland, widthIsland);
+        int steps = getRandomSteps(direction, lengthIsland, widthIsland);
         int newX = getNewCoordinateX(direction, oldX, steps);
         int newY = getNewCoordinateY(direction, oldY, steps);
         if (!isValidCoordinates(newX, newY, lengthIsland, widthIsland)) {
             return null;
         }
-
         Location newLocation = locations[newX][newY];
         if (!isLocationFree(newLocation)) {
             return null;
@@ -124,10 +121,10 @@ public abstract class Animal {
 
     private int getNewCoordinateX(Direction direction, int oldX, int steps) {
         int newX = 0;
-        if (direction == Direction.UP) {
+        if (direction == UP) {
             newX = oldX - steps;
         }
-        else if (direction == Direction.DOWN) {
+        else if (direction == DOWN) {
             newX = oldX + steps;
         }
         return newX;
@@ -163,37 +160,44 @@ public abstract class Animal {
     }
 
     private Direction getRandomDirection(int oldX, int oldY, int lengthIsland, int widthIsland) {
-        //TODO
-        return Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
-    }
-
-    private int getRandomSteps() {
-        int possibleDistance = getPossibleDistance();
-        if (possibleDistance == 1) {
-            return possibleDistance;
+        if (oldX == 0 && oldY == 0) {
+            Direction[] directions = new Direction[] {DOWN, RIGHT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldX == 0 && oldY == widthIsland-1) {
+            Direction[] directions = new Direction[] {UP, RIGHT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldX == lengthIsland-1 && oldY == 0) {
+            Direction[] directions = new Direction[] {DOWN, LEFT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldX == lengthIsland-1 && oldY == widthIsland-1) {
+            Direction[] directions = new Direction[] {UP, LEFT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldX == 0) {
+            Direction[] directions = new Direction[] {UP, DOWN, RIGHT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldY == 0) {
+            Direction[] directions = new Direction[] {LEFT, DOWN, RIGHT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldX == lengthIsland-1) {
+            Direction[] directions = new Direction[] {UP, DOWN, LEFT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
+        } else if (oldY == widthIsland-1) {
+            Direction[] directions = new Direction[] {LEFT, UP, RIGHT};
+            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
         } else {
-            return ThreadLocalRandom.current().nextInt(1, possibleDistance);
+            return Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
         }
     }
 
-    private int getBorderIslandX() {
-
-        //TODO
-        return Integer.parseInt(getProperties().getProperty("length"));
-    }
-
-    private int getBorderIslandY() {
-        return Integer.parseInt(getProperties().getProperty("width"));
-    }
-
-    private Properties getProperties() {
-        Properties properties = new Properties();
-        try(FileReader fileReader = new FileReader(Objects.requireNonNull(Application.class.getResource("/island.properties")).getFile())) {
-            properties.load(fileReader);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private int getRandomSteps(Direction direction, int lengthIsland, int widthIsland) {
+        int steps = 0;
+        int possibleDistance = getPossibleDistance();
+        if (direction == LEFT || direction == RIGHT){
+            steps = Math.min(lengthIsland-1, ThreadLocalRandom.current().nextInt(0, possibleDistance));
+        } else if (direction == UP || direction == DOWN) {
+            steps = Math.min(widthIsland-1, ThreadLocalRandom.current().nextInt(0, possibleDistance));
         }
-        return properties;
+        return steps;
     }
 
     private void eatAnimal(List<? extends Animal> animals) {
@@ -209,7 +213,6 @@ public abstract class Animal {
                     return;
                 }
             }
-
         }
     }
 

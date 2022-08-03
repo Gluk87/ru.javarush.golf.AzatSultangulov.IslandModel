@@ -2,9 +2,6 @@ package ru.javarush.islandmodel.model.island;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 public class Island{
     private final int length;
