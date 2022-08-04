@@ -19,14 +19,12 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("unchecked")
 public class Location {
     private final Coordinates coordinates;
-    private final Location[][] locations;
     private final List<Predator> predators;
     private final List<Herbivore> herbivores;
     private final List<Plant> plants;
 
-    public Location(Coordinates coordinates, Location[][] locations) {
+    public Location(Coordinates coordinates) {
         this.coordinates = coordinates;
-        this.locations = locations;
         predators = (List<Predator>) createAnimals(new PredatorFactory());
         herbivores = (List<Herbivore>) createAnimals(new HerbivoreFactory());
         plants = createPlants();
@@ -42,7 +40,7 @@ public class Location {
         herbivores.forEach(herbivore -> herbivore.eat(plants));
     }
 
-    public void moving() {
+    public void moving(Location[][] locations) {
         predators.removeIf(predator -> predator.move(this, locations));
         herbivores.removeIf(herbivore -> herbivore.move(this, locations));
     }

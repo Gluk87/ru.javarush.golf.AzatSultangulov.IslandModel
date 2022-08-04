@@ -17,7 +17,7 @@ public class Island implements Runnable{
     public void initialize() {
         for (int i = 0; i < length; i++){
             for (int j = 0; j < width; j++) {
-                locations[i][j] = new Location(new Coordinates(i, j), locations);
+                locations[i][j] = new Location(new Coordinates(i, j));
             }
         }
     }
@@ -41,7 +41,7 @@ public class Island implements Runnable{
     public void startMoving() {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
-                locations[i][j].moving();
+                locations[i][j].moving(locations);
             }
         }
     }

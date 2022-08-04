@@ -24,7 +24,7 @@ public class Application {
         int length = Integer.parseInt(properties.getProperty("length"));
         int width = Integer.parseInt(properties.getProperty("width"));
 
-        System.out.println("Остров размером " + length + " X " + width);
+        System.out.println("Game Start. Island size: " + length + " X " + width);
 
         Island island = new Island(length, width);
         island.initialize();
