@@ -1,5 +1,7 @@
 package ru.javarush.islandmodel.model.animals;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.javarush.islandmodel.exceptions.MissingAnnotationException;
 import ru.javarush.islandmodel.model.animals.herbivores.*;
 import ru.javarush.islandmodel.model.animals.predators.*;
@@ -12,6 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static ru.javarush.islandmodel.model.island.Direction.*;
 
+@Getter
+@Setter
 @SuppressWarnings("unchecked")
 public abstract class Animal {
     public static final int COUNT_TRIES_TO_MOVE = 4;
@@ -28,15 +32,19 @@ public abstract class Animal {
                     Mouse.class, Map.of(Caterpillar.class, 90),
                     Duck.class, Map.of(Caterpillar.class, 90));
 
-    public abstract double getSatiety();
+    private double satiety;
+    private Gender gender;
+    private boolean isBreed;
 
-    public abstract void setSatiety(double satiety);
+    protected Animal() {
+        this.satiety = getMaxSatiety()/2;
+        this.gender = getRandomGender();
+        this.isBreed = false;
+    }
 
-    public abstract Gender getGender();
-
-    public abstract boolean isBreed();
-
-    public abstract void setBreed(boolean isBreed);
+    public double getSatiety() {
+        return this.satiety;
+    }
 
     public abstract void breed(Location location);
 
@@ -71,6 +79,17 @@ public abstract class Animal {
     public boolean die() {
         this.setSatiety(Math.max(0, this.getSatiety() - this.getMaxSatiety()/10));
         return this.getSatiety() == 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return o != null && getClass() == o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSatiety());
     }
 
     protected Gender getRandomGender() {
