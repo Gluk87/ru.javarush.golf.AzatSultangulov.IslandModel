@@ -35,11 +35,10 @@ public class Location {
     }
 
     public void eating() {
-
+        predators.forEach(predator -> predator.eat(herbivores));
         for (int i = 0; i < predators.size(); i++) {
             predators.get(i).eat(predators);
         }
-        predators.forEach(predator -> predator.eat(herbivores));
         herbivores.forEach(herbivore -> herbivore.eat(plants));
     }
 
@@ -70,6 +69,18 @@ public class Location {
         }
     }
 
+    public int getMaxOnOneLocation(Class<?> o) {
+        if (!o.isAnnotationPresent(Characteristics.class)){
+            throw new MissingAnnotationException("Missing annotation " + Characteristics.class +" for " + o.getName());
+        }
+        Characteristics characteristics = o.getAnnotation(Characteristics.class);
+        return characteristics.maxOnOneLocation();
+    }
+
+    public int getRandomCount(int maxOnOneLocation) {
+        return ThreadLocalRandom.current().nextInt(maxOnOneLocation);
+    }
+
     private List<? extends Animal> createAnimals(AnimalFactory factory) {
         List<Animal> animalList = new ArrayList<>();
         AnimalTypes[] animalTypes = AnimalTypes.values();
@@ -78,7 +89,7 @@ public class Location {
             if (animal == null) {
                 continue;
             }
-            int animalCount = getRandomCount(getMaxOnOneLocation(animal));
+            int animalCount = getRandomCount(getMaxOnOneLocation(animal.getClass()));
             for (int i = 0; i < animalCount; i++) {
                 animalList.add(factory.createAnimal(animalType));
             }
@@ -88,23 +99,11 @@ public class Location {
 
     private List<Plant> createPlants() {
         List<Plant> plantList = new ArrayList<>();
-        int plantCount = getRandomCount(getMaxOnOneLocation(new Plant()));
+        int plantCount = getRandomCount(getMaxOnOneLocation(Plant.class));
         for (int i = 0; i < plantCount; i++) {
             plantList.add(new Plant());
         }
         return plantList;
-    }
-
-    private int getRandomCount(int maxOnOneLocation) {
-        return ThreadLocalRandom.current().nextInt(maxOnOneLocation);
-    }
-
-    private int getMaxOnOneLocation(Object o) {
-        if (!o.getClass().isAnnotationPresent(Characteristics.class)){
-            throw new MissingAnnotationException("Missing annotation " + Characteristics.class +" for " + o.getClass().getName());
-        }
-        Characteristics characteristics = o.getClass().getAnnotation(Characteristics.class);
-        return characteristics.maxOnOneLocation();
     }
 }
 

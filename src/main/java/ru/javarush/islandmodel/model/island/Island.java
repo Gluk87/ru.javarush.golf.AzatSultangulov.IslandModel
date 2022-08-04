@@ -3,7 +3,7 @@ package ru.javarush.islandmodel.model.island;
 import lombok.Getter;
 
 @Getter
-public class Island{
+public class Island implements Runnable{
     private final int length;
     private final int width;
     private final Location[][] locations;
@@ -20,6 +20,14 @@ public class Island{
                 locations[i][j] = new Location(new Coordinates(i, j), locations);
             }
         }
+    }
+
+    @Override
+    public void run() {
+        startEating();
+        startMoving();
+        startBreeding();
+        startDying();
     }
 
     public void startEating() {
@@ -42,6 +50,14 @@ public class Island{
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
                 locations[i][j].breeding();
+            }
+        }
+    }
+
+    public void startDying() {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                locations[i][j].dying();
             }
         }
     }

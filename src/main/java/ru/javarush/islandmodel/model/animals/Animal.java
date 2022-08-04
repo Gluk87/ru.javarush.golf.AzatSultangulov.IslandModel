@@ -3,7 +3,6 @@ package ru.javarush.islandmodel.model.animals;
 import ru.javarush.islandmodel.exceptions.MissingAnnotationException;
 import ru.javarush.islandmodel.model.animals.herbivores.*;
 import ru.javarush.islandmodel.model.animals.predators.*;
-import ru.javarush.islandmodel.model.animals.predators.Predator;
 import ru.javarush.islandmodel.model.island.Direction;
 import ru.javarush.islandmodel.model.island.Location;
 import ru.javarush.islandmodel.model.plants.Plant;
@@ -70,6 +69,7 @@ public abstract class Animal {
     }
 
     public boolean die() {
+        this.setSatiety(Math.max(0, this.getSatiety() - this.getMaxSatiety()/10));
         return this.getSatiety() == 0;
     }
 

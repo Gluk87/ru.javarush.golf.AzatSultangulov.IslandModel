@@ -1,21 +1,19 @@
 package ru.javarush.islandmodel;
 
 import ru.javarush.islandmodel.model.island.Island;
+import ru.javarush.islandmodel.system.PlantGrowth;
 import ru.javarush.islandmodel.system.Statistic;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Application {
     public static void main(String[] args) {
-        //   System.out.println("Введите длину острова:");
-        //   Scanner scanner = new Scanner(System.in);
-        //   int length = scanner.nextInt();
-        //   System.out.println("Введите ширину острова:");
-        //   int width = scanner.nextInt();
-
         Properties properties = new Properties();
         try(FileReader fileReader = new FileReader(Objects.requireNonNull(Application.class.getResource("/island.properties")).getFile())) {
             properties.load(fileReader);
@@ -30,29 +28,27 @@ public class Application {
 
         Island island = new Island(length, width);
         island.initialize();
-
-        //    ExecutorService executorService = Executors.newFixedThreadPool(2);
-        //    while (island.getCountAnimals() > 0) {
-        //            executorService.execute(new Tact(island));
-        //    }
-
         Statistic statistic = new Statistic(island);
-        statistic.printInfo();
+        PlantGrowth plantGrowth = new PlantGrowth(island);
 
-        System.out.println("--------------------------------------------------------------");
-        System.out.println("Животные покушали:");
-        island.startEating();
-        statistic.printInfo();
+        ScheduledExecutorService executorStat = Executors.newScheduledThreadPool(5);
+        executorStat.scheduleWithFixedDelay(statistic, 1, 1, TimeUnit.SECONDS);
 
-        System.out.println("--------------------------------------------------------------");
-        System.out.println("Животные перешли в другие локации:");
-        island.startMoving();
-        statistic.printInfo();
+        ScheduledExecutorService executorLifeCycle = Executors.newScheduledThreadPool(5);
+        executorLifeCycle.scheduleWithFixedDelay(island, 2, 1, TimeUnit.SECONDS);
 
-        System.out.println("--------------------------------------------------------------");
-        System.out.println("Животные размножаются:");
-        island.startBreeding();
-        statistic.printInfo();
+        ScheduledExecutorService executorPlantGrowth = Executors.newScheduledThreadPool(5);
+        executorPlantGrowth.scheduleWithFixedDelay(plantGrowth, 3, 3, TimeUnit.SECONDS);
+
+        while (true) {
+            if (island.getCountAnimals() == 0) {
+                break;
+            }
+        }
+        executorLifeCycle.shutdown();
+        executorStat.shutdown();
+        System.out.println("==================================================");
+        System.out.println("Game over");
     }
 }
 

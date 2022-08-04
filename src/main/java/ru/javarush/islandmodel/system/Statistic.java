@@ -1,20 +1,21 @@
 package ru.javarush.islandmodel.system;
 
 import ru.javarush.islandmodel.model.animals.AnimalTypes;
-import ru.javarush.islandmodel.model.animals.predators.Predator;
 import ru.javarush.islandmodel.model.island.Island;
 import ru.javarush.islandmodel.model.island.Location;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-public class Statistic {
+public class Statistic implements Runnable{
     private final Island island;
     private final Location[][] locations;
 
     public Statistic(Island island) {
         this.island = island;
         this.locations = island.getLocations();
+    }
+
+    @Override
+    public void run() {
+        printInfo();
     }
 
     public void printInfo() {
@@ -45,6 +46,5 @@ public class Statistic {
                 System.out.println("Plants [ " + location.getPlants().size() + " ]");
             }
         }
-        System.out.println("==================================================");
     }
 }
