@@ -24,9 +24,13 @@ public class Island implements Runnable{
 
     @Override
     public void run() {
+       // System.out.println("startEating " + Thread.currentThread());
         startEating();
+      //  System.out.println("startMoving " + Thread.currentThread());
         startMoving();
+      //  System.out.println("startBreeding " + Thread.currentThread());
         startBreeding();
+     //   System.out.println("startDying " + Thread.currentThread());
         startDying();
     }
 
@@ -52,6 +56,13 @@ public class Island implements Runnable{
                 locations[i][j].breeding();
             }
         }
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                locations[i][j].getPredators().forEach(predator -> predator.setBreed(false));
+                locations[i][j].getHerbivores().forEach(herbivore -> herbivore.setBreed(false));
+            }
+        }
+
     }
 
     public void startDying() {

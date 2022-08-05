@@ -33,11 +33,15 @@ public class Location {
     }
 
     public void eating() {
-        predators.forEach(predator -> predator.eat(herbivores));
+        for (int i = 0; i < predators.size(); i++) {
+            predators.get(i).eat(herbivores);
+        }
         for (int i = 0; i < predators.size(); i++) {
             predators.get(i).eat(predators);
         }
-        herbivores.forEach(herbivore -> herbivore.eat(plants));
+        for (int i = 0; i < herbivores.size(); i++) {
+            herbivores.get(i).eat(plants);
+        }
     }
 
     public void moving(Location[][] locations) {

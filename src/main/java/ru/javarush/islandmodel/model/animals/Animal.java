@@ -19,19 +19,6 @@ import static ru.javarush.islandmodel.model.island.Direction.*;
 @SuppressWarnings("unchecked")
 public abstract class Animal {
     public static final int COUNT_TRIES_TO_MOVE = 4;
-    private static final Map<Class<? extends Animal>, Map<Class<? extends Animal>, Integer>> CHANCE_TO_EAT =
-            Map.of(Wolf.class, Map.of(Deer.class, 15, Rabbit.class, 60, Mouse.class, 80, Goat.class, 60,
-                            Sheep.class, 70, Boar.class, 15, Buffalo.class, 10, Duck.class, 40),
-                    Boa.class, Map.of(Fox.class, 15, Rabbit.class, 20, Mouse.class, 40, Duck.class, 10),
-                    Fox.class, Map.of(Rabbit.class, 70, Mouse.class, 90, Duck.class, 60, Caterpillar.class, 40),
-                    Bear.class, Map.of(Boa.class, 80, Horse.class, 40, Deer.class, 80, Rabbit.class, 80,
-                             Mouse.class, 90, Goat.class, 70, Sheep.class, 70, Boar.class, 50,
-                             Buffalo.class, 20, Duck.class, 70),
-                    Eagle.class, Map.of(Fox.class, 10, Rabbit.class, 90, Mouse.class, 90, Duck.class, 80),
-                    Boar.class, Map.of(Mouse.class, 50, Caterpillar.class, 80),
-                    Mouse.class, Map.of(Caterpillar.class, 90),
-                    Duck.class, Map.of(Caterpillar.class, 90));
-
     private double satiety;
     private Gender gender;
     private boolean isBreed;
@@ -47,6 +34,10 @@ public abstract class Animal {
     }
 
     public abstract void breed(Location location);
+
+    public Map<Class<? extends Animal>, Integer> getChanceToEat() {
+        return Collections.emptyMap();
+    }
 
     public void eat(List<?> objects) {
         if (!objects.isEmpty()) {
@@ -98,6 +89,18 @@ public abstract class Animal {
 
     protected double getMaxSatiety() {
         return this.getCharacteristics().maxSatiety();
+    }
+
+    protected void eatPlant(List<Plant> plants) {
+        Iterator<Plant> iterator = plants.iterator();
+        while (iterator.hasNext()) {
+            Plant plant = iterator.next();
+            if (this.getSatiety() < this.getMaxSatiety()) {
+                this.setSatiety(Math.min(this.getSatiety() + plant.getWeight(), this.getMaxSatiety()));
+                iterator.remove();
+                return;
+            }
+        }
     }
 
     private double getWeight() {
@@ -223,7 +226,7 @@ public abstract class Animal {
         Iterator<? extends Animal> iterator = animals.iterator();
         while (iterator.hasNext()) {
             Animal animal = iterator.next();
-            Integer chanceToEat = CHANCE_TO_EAT.get(this.getClass()).get(animal.getClass());
+            Integer chanceToEat = this.getChanceToEat().get(animal.getClass());
             if (chanceToEat != null) {
                 int random = ThreadLocalRandom.current().nextInt(1, 100);
                 if (chanceToEat >= random && this.getSatiety() < this.getMaxSatiety()) {
@@ -231,18 +234,6 @@ public abstract class Animal {
                     iterator.remove();
                     return;
                 }
-            }
-        }
-    }
-
-    private void eatPlant(List<Plant> plants) {
-        Iterator<Plant> iterator = plants.iterator();
-        while (iterator.hasNext()) {
-            Plant plant = iterator.next();
-            if (this.getSatiety() < this.getMaxSatiety()) {
-                this.setSatiety(Math.min(this.getSatiety() + plant.getWeight(), this.getMaxSatiety()));
-                iterator.remove();
-                return;
             }
         }
     }

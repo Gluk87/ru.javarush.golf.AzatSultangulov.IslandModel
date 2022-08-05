@@ -32,7 +32,7 @@ public class Application {
         PlantGrowth plantGrowth = new PlantGrowth(island);
 
         ScheduledExecutorService executorStat = Executors.newScheduledThreadPool(5);
-        executorStat.scheduleWithFixedDelay(statistic, 1, 1, TimeUnit.SECONDS);
+        executorStat.scheduleWithFixedDelay(statistic, 3, 1, TimeUnit.SECONDS);
 
         ScheduledExecutorService executorLifeCycle = Executors.newScheduledThreadPool(5);
         executorLifeCycle.scheduleWithFixedDelay(island, 2, 1, TimeUnit.SECONDS);
@@ -47,6 +47,7 @@ public class Application {
         }
         executorLifeCycle.shutdown();
         executorStat.shutdown();
+        executorPlantGrowth.shutdown();
         System.out.println("==================================================");
         System.out.println("Game over");
     }
