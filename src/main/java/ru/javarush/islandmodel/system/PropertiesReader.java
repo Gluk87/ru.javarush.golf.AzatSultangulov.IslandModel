@@ -12,12 +12,8 @@ public class PropertiesReader {
     private PropertiesReader() {
     }
 
-    public static int getLength() {
-        return Integer.parseInt(getProperties().getProperty("length"));
-    }
-
-    public static int getWidth() {
-        return Integer.parseInt(getProperties().getProperty("width"));
+    public static int getProperty(String parameter) {
+        return Integer.parseInt(getProperties().getProperty(parameter));
     }
 
     private static Properties getProperties() {

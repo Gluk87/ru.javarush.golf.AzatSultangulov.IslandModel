@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Application {
     public static void main(String[] args) {
-        int length = PropertiesReader.getLength();
-        int width = PropertiesReader.getWidth();
+        int length = PropertiesReader.getProperty("length");
+        int width = PropertiesReader.getProperty("width");
 
         System.out.println("Game Start. Island size: " + length + " X " + width);
 
