@@ -2,27 +2,17 @@ package ru.javarush.islandmodel;
 
 import ru.javarush.islandmodel.model.island.Island;
 import ru.javarush.islandmodel.system.PlantGrowth;
+import ru.javarush.islandmodel.system.PropertiesReader;
 import ru.javarush.islandmodel.system.Statistic;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
     public static void main(String[] args) {
-        Properties properties = new Properties();
-        try(FileReader fileReader = new FileReader(Objects.requireNonNull(Application.class.getResource("/island.properties")).getFile())) {
-            properties.load(fileReader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int length = Integer.parseInt(properties.getProperty("length"));
-        int width = Integer.parseInt(properties.getProperty("width"));
+        int length = PropertiesReader.getLength();
+        int width = PropertiesReader.getWidth();
 
         System.out.println("Game Start. Island size: " + length + " X " + width);
 
