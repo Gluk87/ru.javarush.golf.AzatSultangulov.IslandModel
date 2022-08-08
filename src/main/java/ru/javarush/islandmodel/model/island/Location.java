@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Getter
 @SuppressWarnings("unchecked")
@@ -22,6 +24,7 @@ public class Location {
     private final List<Predator> predators;
     private final List<Herbivore> herbivores;
     private final List<Plant> plants;
+    private final Lock lock = new ReentrantLock(true);
 
     public Location(Coordinates coordinates) {
         this.coordinates = coordinates;
@@ -34,13 +37,13 @@ public class Location {
 
     public void eating() {
         for (int i = 0; i < predators.size(); i++) {
-            predators.get(i).eat(herbivores);
+            predators.get(i).eat(herbivores, this);
         }
         for (int i = 0; i < predators.size(); i++) {
-            predators.get(i).eat(predators);
+            predators.get(i).eat(predators, this);
         }
         for (int i = 0; i < herbivores.size(); i++) {
-            herbivores.get(i).eat(plants);
+            herbivores.get(i).eat(plants, this);
         }
     }
 
@@ -65,8 +68,8 @@ public class Location {
     }
 
     public void dying() {
-        predators.removeIf(Animal::die);
-        herbivores.removeIf(Animal::die);
+        predators.removeIf(predator -> predator.die(this));
+        herbivores.removeIf(herbivore -> herbivore.die(this));
     }
 
     public void addAnimal(Animal animal) {

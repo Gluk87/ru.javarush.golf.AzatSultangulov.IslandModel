@@ -14,9 +14,14 @@ public class LifeCycle implements Runnable{
 
     @Override
     public void run() {
-        location.eating();
-        location.breeding();
-        location.moving(island.getLocations());
-        location.dying();
+        location.getLock().lock();
+        try {
+            location.eating();
+            location.breeding();
+            location.moving(island.getLocations());
+            location.dying();
+        } finally {
+            location.getLock().unlock();
+        }
     }
 }

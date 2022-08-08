@@ -39,38 +39,53 @@ public abstract class Animal {
         return Collections.emptyMap();
     }
 
-    public void eat(List<?> objects) {
-        if (!objects.isEmpty()) {
-            if (objects.get(0) instanceof Animal) {
-                eatAnimal((List<? extends Animal>) objects);
-            } else if (objects.get(0) instanceof Plant) {
-                eatPlant((List<Plant>) objects);
+    public void eat(List<?> objects, Location location) {
+        location.getLock().lock();
+        try {
+            if (!objects.isEmpty()) {
+                if (objects.get(0) instanceof Animal) {
+                    eatAnimal((List<? extends Animal>) objects);
+                } else if (objects.get(0) instanceof Plant) {
+                    eatPlant((List<Plant>) objects);
+                }
             }
+        } finally {
+            location.getLock().unlock();
         }
     }
 
     public boolean move(Location currentLocation, Location[][] locations) {
-        Location newLocation = null;
-        int tries = 0;
-        while (tries < COUNT_TRIES_TO_MOVE) {
-            newLocation = getNewLocation(currentLocation, locations);
-            if (newLocation != null) {
-                break;
+        currentLocation.getLock().lock();
+        try {
+            Location newLocation = null;
+            int tries = 0;
+            while (tries < COUNT_TRIES_TO_MOVE) {
+                newLocation = getNewLocation(currentLocation, locations);
+                if (newLocation != null) {
+                    break;
+                }
+                tries++;
             }
-            tries++;
-        }
-        if (newLocation != null && newLocation != currentLocation) {
-            newLocation.addAnimal(this);
-            return true;
+            if (newLocation != null && newLocation != currentLocation) {
+                newLocation.addAnimal(this);
+                return true;
 
-        } else {
-            return false;
+            } else {
+                return false;
+            }
+        } finally {
+            currentLocation.getLock().unlock();
         }
     }
 
-    public boolean die() {
-        this.setSatiety(Math.max(0, this.getSatiety() - this.getMaxSatiety()/10));
-        return this.getSatiety() == 0;
+    public boolean die(Location location) {
+        location.getLock().lock();
+        try {
+            this.setSatiety(Math.max(0, this.getSatiety() - this.getMaxSatiety()/10));
+            return this.getSatiety() == 0;
+        } finally {
+            location.getLock().unlock();
+        }
     }
 
     @Override
