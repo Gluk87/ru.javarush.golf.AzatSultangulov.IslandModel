@@ -1,9 +1,8 @@
 package ru.javarush.islandmodel;
 
 import ru.javarush.islandmodel.model.island.Island;
-import ru.javarush.islandmodel.system.PlantGrowth;
-import ru.javarush.islandmodel.system.PropertiesReader;
-import ru.javarush.islandmodel.system.Statistic;
+import ru.javarush.islandmodel.model.island.Location;
+import ru.javarush.islandmodel.system.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,19 +17,23 @@ public class Application {
 
         Island island = new Island(length, width);
         island.initialize();
-        Statistic statistic = new Statistic(island);
-        PlantGrowth plantGrowth = new PlantGrowth(island);
 
-        ScheduledExecutorService executorStat = Executors.newScheduledThreadPool(5);
-        executorStat.scheduleWithFixedDelay(statistic, 3, 1, TimeUnit.SECONDS);
+        ScheduledExecutorService executorStat = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorLifeCycle = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorPlantGrowth = Executors.newScheduledThreadPool(1);
 
-        ScheduledExecutorService executorLifeCycle = Executors.newScheduledThreadPool(5);
-        executorLifeCycle.scheduleWithFixedDelay(island, 2, 1, TimeUnit.SECONDS);
+        executorStat.scheduleWithFixedDelay(new Statistic(island), 1, 1, TimeUnit.SECONDS);
 
-        ScheduledExecutorService executorPlantGrowth = Executors.newScheduledThreadPool(5);
-        executorPlantGrowth.scheduleWithFixedDelay(plantGrowth, 3, 3, TimeUnit.SECONDS);
+        for (int i = 0; i < island.getLocations().length; i++) {
+            for (int j = 0; j < island.getLocations()[i].length; j++) {
+                Location location = island.getLocations()[i][j];
+                executorLifeCycle.scheduleWithFixedDelay(new LifeCycle(location, island), 2, 1, TimeUnit.SECONDS);
+                executorPlantGrowth.scheduleWithFixedDelay(new PlantGrowth(location), 3, 3, TimeUnit.SECONDS);
+            }
+        }
 
         while (true) {
+            Delay.sleep(3000);
             if (island.getCountAnimals() == 0) {
                 break;
             }

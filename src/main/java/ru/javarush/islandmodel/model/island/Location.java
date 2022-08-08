@@ -51,11 +51,17 @@ public class Location {
 
     public void breeding() {
         for (int i = 0; i < predators.size(); i++) {
-            predators.get(i).breed(this);
+            if (predators.get(i).breed(this)) {
+                predators.add(predators.get(i));
+            }
         }
         for (int i = 0; i < herbivores.size(); i++) {
-            herbivores.get(i).breed(this);
+            if (herbivores.get(i).breed(this)) {
+                herbivores.add(herbivores.get(i));
+            }
         }
+        getPredators().forEach(predator -> predator.setBreed(false));
+        getHerbivores().forEach(herbivore -> herbivore.setBreed(false));
     }
 
     public void dying() {

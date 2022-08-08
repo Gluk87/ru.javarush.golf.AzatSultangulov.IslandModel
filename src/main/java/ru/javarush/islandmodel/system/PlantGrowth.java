@@ -5,12 +5,10 @@ import ru.javarush.islandmodel.model.island.Location;
 import ru.javarush.islandmodel.model.plants.Plant;
 
 public class PlantGrowth implements Runnable{
-    private final Island island;
-    private final Location[][] locations;
+    private final Location location;
 
-    public PlantGrowth(Island island) {
-        this.island = island;
-        this.locations = island.getLocations();
+    public PlantGrowth(Location location) {
+        this.location = location;
     }
 
     @Override
@@ -19,19 +17,14 @@ public class PlantGrowth implements Runnable{
     }
 
     public void growth() {
-        for (int i = 0; i < locations.length; i++) {
-            for (int j = 0; j < locations[i].length; j++) {
-                int currentCountPlants = locations[i][j].getPlants().size();
-                int maxCount = locations[i][j].getMaxOnOneLocation(Plant.class);
-                int plantRandomCount = locations[i][j].getRandomCount(maxCount);
-                if (currentCountPlants + plantRandomCount > maxCount) {
-                    plantRandomCount = maxCount - currentCountPlants;
-                }
-                for (int k = 0; k < plantRandomCount; k++) {
-                    locations[i][j].getPlants().add(new Plant());
-                }
-
-            }
+        int currentCountPlants = location.getPlants().size();
+        int maxCount = location.getMaxOnOneLocation(Plant.class);
+        int plantRandomCount = location.getRandomCount(maxCount);
+        if (currentCountPlants + plantRandomCount > maxCount) {
+            plantRandomCount = maxCount - currentCountPlants;
+        }
+        for (int k = 0; k < plantRandomCount; k++) {
+            location.getPlants().add(new Plant());
         }
     }
 }

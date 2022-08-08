@@ -33,7 +33,7 @@ public abstract class Animal {
         return this.satiety;
     }
 
-    public abstract void breed(Location location);
+    public abstract boolean breed(Location location);
 
     public Map<Class<? extends Animal>, Integer> getChanceToEat() {
         return Collections.emptyMap();
@@ -62,6 +62,7 @@ public abstract class Animal {
         if (newLocation != null && newLocation != currentLocation) {
             newLocation.addAnimal(this);
             return true;
+
         } else {
             return false;
         }
@@ -127,7 +128,7 @@ public abstract class Animal {
         int oldCoordinateY = currentLocation.getCoordinates().getY();
         int lengthIsland = locations.length;
         int widthIsland = locations[0].length;
-        Direction direction = getRandomDirection(oldCoordinateX, oldCoordinateY, lengthIsland, widthIsland);
+        Direction direction = getRandomDirection();
         int steps = getRandomSteps(direction, lengthIsland, widthIsland);
         int newCoordinateX = getNewCoordinateX(direction, oldCoordinateX, steps);
         int newCoordinateY = getNewCoordinateY(direction, oldCoordinateY, steps);
@@ -142,7 +143,7 @@ public abstract class Animal {
     }
 
     private int getNewCoordinateX(Direction direction, int oldCoordinateX, int steps) {
-        int newCoordinateX = 0;
+        int newCoordinateX = oldCoordinateX;
         if (direction == UP) {
             newCoordinateX = oldCoordinateX - steps;
         }
@@ -153,7 +154,7 @@ public abstract class Animal {
     }
 
     private int getNewCoordinateY(Direction direction, int oldCoordinateY, int steps) {
-        int newCoordinateY = 0;
+        int newCoordinateY = oldCoordinateY;
         if (direction == LEFT) {
             newCoordinateY = oldCoordinateY - steps;
         }
@@ -181,34 +182,8 @@ public abstract class Animal {
         return newCoordinateX <= lengthIsland - 1 && newCoordinateY <= widthIsland - 1 && newCoordinateX >= 0 && newCoordinateY >= 0;
     }
 
-    private Direction getRandomDirection(int oldX, int oldY, int lengthIsland, int widthIsland) {
-        if (oldX == 0 && oldY == 0) {
-            Direction[] directions = new Direction[] {DOWN, RIGHT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldX == 0 && oldY == widthIsland-1) {
-            Direction[] directions = new Direction[] {UP, RIGHT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldX == lengthIsland-1 && oldY == 0) {
-            Direction[] directions = new Direction[] {DOWN, LEFT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldX == lengthIsland-1 && oldY == widthIsland-1) {
-            Direction[] directions = new Direction[] {UP, LEFT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldX == 0) {
-            Direction[] directions = new Direction[] {UP, DOWN, RIGHT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldY == 0) {
-            Direction[] directions = new Direction[] {LEFT, DOWN, RIGHT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldX == lengthIsland-1) {
-            Direction[] directions = new Direction[] {UP, DOWN, LEFT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else if (oldY == widthIsland-1) {
-            Direction[] directions = new Direction[] {LEFT, UP, RIGHT};
-            return directions[ThreadLocalRandom.current().nextInt(directions.length)];
-        } else {
-            return Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
-        }
+    private Direction getRandomDirection() {
+        return Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
     }
 
     private int getRandomSteps(Direction direction, int lengthIsland, int widthIsland) {

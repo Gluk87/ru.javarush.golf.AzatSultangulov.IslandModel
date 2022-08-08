@@ -9,11 +9,11 @@ import java.util.List;
 public abstract class Predator extends Animal {
 
     @Override
-    public void breed(Location location) {
+    public boolean breed(Location location) {
         List<Predator> predatorsFemale = location.getPredators().stream().filter(predator ->
                 predator.getGender() == Gender.FEMALE && !predator.isBreed()).toList();
         if (predatorsFemale.isEmpty()) {
-            return;
+            return false;
         }
         for (int i = 0; i < predatorsFemale.size(); i++) {
             Predator predatorFemale = predatorsFemale.get(i);
@@ -22,8 +22,9 @@ public abstract class Predator extends Animal {
                 this.setSatiety(Math.max(0, this.getSatiety() - this.getMaxSatiety() / 10));
                 predatorFemale.setBreed(true);
                 predatorFemale.setSatiety(Math.max(0, predatorFemale.getSatiety() - predatorFemale.getMaxSatiety() / 10));
-                location.getPredators().add(this);
+                return true;
             }
         }
+        return false;
     }
 }

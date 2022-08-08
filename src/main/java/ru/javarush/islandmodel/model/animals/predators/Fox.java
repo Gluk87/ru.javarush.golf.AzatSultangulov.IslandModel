@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Characteristics(weight = 8, maxSatiety = 2, maxOnOneLocation = 30, possibleDistance = 2)
 public class Fox extends Predator {
-    public static final Map<Class<? extends Animal>, Integer> CHANCE_TO_EAT =
+    private static final Map<Class<? extends Animal>, Integer> CHANCE_TO_EAT =
             Map.of(Rabbit.class, 70, Mouse.class, 90, Duck.class, 60, Caterpillar.class, 40);
 
     @Override

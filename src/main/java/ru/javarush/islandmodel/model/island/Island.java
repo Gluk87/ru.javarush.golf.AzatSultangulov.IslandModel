@@ -3,7 +3,7 @@ package ru.javarush.islandmodel.model.island;
 import lombok.Getter;
 
 @Getter
-public class Island implements Runnable{
+public class Island {
     private final int length;
     private final int width;
     private final Location[][] locations;
@@ -22,7 +22,7 @@ public class Island implements Runnable{
         }
     }
 
-    @Override
+ /*   @Override
     public void run() {
        // System.out.println("startEating " + Thread.currentThread());
         startEating();
@@ -71,7 +71,7 @@ public class Island implements Runnable{
                 locations[i][j].dying();
             }
         }
-    }
+    }*/
 
     public int getCountPredators() {
         int count = 0;

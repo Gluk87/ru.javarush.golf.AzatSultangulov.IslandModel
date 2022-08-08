@@ -1,8 +1,13 @@
 package ru.javarush.islandmodel.system;
 
 import ru.javarush.islandmodel.model.animals.AnimalTypes;
+import ru.javarush.islandmodel.model.animals.herbivores.Herbivore;
+import ru.javarush.islandmodel.model.animals.predators.Predator;
 import ru.javarush.islandmodel.model.island.Island;
 import ru.javarush.islandmodel.model.island.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Statistic implements Runnable{
     private final Island island;
@@ -29,7 +34,8 @@ public class Statistic implements Runnable{
                 System.out.println("Location [" + location.getCoordinates().getX() + ", " + location.getCoordinates().getY() + "]");
                 System.out.print("Predators [ ");
                 for (AnimalTypes animalType: AnimalTypes.values()) {
-                    int countPredators = (int) location.getPredators().stream().filter(p -> p.toString().equalsIgnoreCase(animalType.toString())).count();
+                    List<Predator> predators = new ArrayList<>(location.getPredators()) ;
+                    int countPredators = (int) predators.stream().filter(p -> p.toString().equalsIgnoreCase(animalType.toString())).count();
                     if (countPredators > 0) {
                         System.out.print(animalType + ":" + countPredators + " ");
                     }
@@ -37,7 +43,8 @@ public class Statistic implements Runnable{
                 System.out.println(" ]");
                 System.out.print("Herbivores [ ");
                 for (AnimalTypes animalType: AnimalTypes.values()) {
-                    int countHerbivores = (int) location.getHerbivores().stream().filter(p -> p.toString().equalsIgnoreCase(animalType.toString())).count();
+                    List<Herbivore> herbivores = new ArrayList<>(location.getHerbivores()) ;
+                    int countHerbivores = (int) herbivores.stream().filter(p -> p.toString().equalsIgnoreCase(animalType.toString())).count();
                     if (countHerbivores > 0) {
                         System.out.print(animalType + ":" + countHerbivores + " ");
                     }

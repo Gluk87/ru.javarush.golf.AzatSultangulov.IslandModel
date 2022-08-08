@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Characteristics(weight = 0.05, maxSatiety = 0.01, maxOnOneLocation = 500, possibleDistance = 1)
 public class Mouse extends Herbivore {
-    public static final Map<Class<? extends Animal>, Integer> CHANCE_TO_EAT =
+    private static final Map<Class<? extends Animal>, Integer> CHANCE_TO_EAT =
             Map.of(Caterpillar.class, 90);
 
     @Override
