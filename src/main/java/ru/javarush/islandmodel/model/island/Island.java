@@ -22,62 +22,11 @@ public class Island {
         }
     }
 
- /*   @Override
-    public void run() {
-       // System.out.println("startEating " + Thread.currentThread());
-        startEating();
-      //  System.out.println("startMoving " + Thread.currentThread());
-        startMoving();
-      //  System.out.println("startBreeding " + Thread.currentThread());
-        startBreeding();
-     //   System.out.println("startDying " + Thread.currentThread());
-        startDying();
-    }
-
-    public void startEating() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].eating();
-            }
-        }
-    }
-
-    public void startMoving() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].moving(locations);
-            }
-        }
-    }
-
-    public void startBreeding() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].breeding();
-            }
-        }
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].getPredators().forEach(predator -> predator.setBreed(false));
-                locations[i][j].getHerbivores().forEach(herbivore -> herbivore.setBreed(false));
-            }
-        }
-
-    }
-
-    public void startDying() {
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < width; j++) {
-                locations[i][j].dying();
-            }
-        }
-    }*/
-
     public int getCountPredators() {
         int count = 0;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
-                count = count + locations[i][j].getPredators().size();
+                count += locations[i][j].getPredators().size();
             }
         }
         return count;
@@ -87,7 +36,7 @@ public class Island {
         int count = 0;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
-                count = count + locations[i][j].getHerbivores().size();
+                count += locations[i][j].getHerbivores().size();
             }
         }
         return count;
